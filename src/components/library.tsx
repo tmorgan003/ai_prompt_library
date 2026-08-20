@@ -4,6 +4,7 @@ import { useMemo, useState, type CSSProperties } from "react";
 import Link from "next/link";
 import Fuse from "fuse.js";
 import type { Prompt, RoleColor } from "@/lib/prompt-types";
+import { categoryIcon, roleIcon } from "@/lib/icons";
 
 const ALL_ROLES = "All roles";
 const ALL_CATEGORIES = "All categories";
@@ -167,12 +168,13 @@ function RolePill({
   active: boolean;
   onClick: () => void;
 }) {
+  const Icon = color ? roleIcon(label) : null;
   return (
     <button
       type="button"
       onClick={onClick}
       aria-current={active}
-      className="rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
+      className="flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors"
       style={
         active
           ? {
@@ -186,6 +188,7 @@ function RolePill({
             }
       }
     >
+      {Icon && <Icon size={14} strokeWidth={2} aria-hidden />}
       {label}
     </button>
   );
@@ -207,24 +210,28 @@ function CategoryNav({
       aria-label="Filter by category"
       className="sticky top-8 flex max-h-[calc(100vh-4rem)] flex-col gap-1 overflow-y-auto"
     >
-      {[ALL_CATEGORIES, ...categories].map((c) => (
-        <button
-          key={c}
-          type="button"
-          onClick={() => onSelect(c)}
-          aria-current={selected === c}
-          className={`rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
-            selected === c ? "" : "font-normal text-muted hover:bg-surface hover:text-foreground"
-          }`}
-          style={
-            selected === c
-              ? { background: color?.soft ?? "var(--accent-soft)", color: color?.accent ?? "var(--accent)" }
-              : undefined
-          }
-        >
-          {c}
-        </button>
-      ))}
+      {[ALL_CATEGORIES, ...categories].map((c) => {
+        const Icon = c === ALL_CATEGORIES ? null : categoryIcon(c);
+        return (
+          <button
+            key={c}
+            type="button"
+            onClick={() => onSelect(c)}
+            aria-current={selected === c}
+            className={`flex items-center gap-2 rounded-md px-3 py-2 text-left text-sm font-medium transition-colors ${
+              selected === c ? "" : "font-normal text-muted hover:bg-surface hover:text-foreground"
+            }`}
+            style={
+              selected === c
+                ? { background: color?.soft ?? "var(--accent-soft)", color: color?.accent ?? "var(--accent)" }
+                : undefined
+            }
+          >
+            {Icon && <Icon size={15} strokeWidth={2} className="shrink-0" aria-hidden />}
+            <span>{c}</span>
+          </button>
+        );
+      })}
     </nav>
   );
 }
@@ -242,28 +249,32 @@ function CategoryChips({
 }) {
   return (
     <>
-      {[ALL_CATEGORIES, ...categories].map((c) => (
-        <button
-          key={c}
-          type="button"
-          onClick={() => onSelect(c)}
-          aria-current={selected === c}
-          className={`shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
-            selected === c ? "" : "border-border text-muted hover:text-foreground"
-          }`}
-          style={
-            selected === c
-              ? {
-                  borderColor: color?.accent ?? "var(--accent)",
-                  background: color?.soft ?? "var(--accent-soft)",
-                  color: color?.accent ?? "var(--accent)",
-                }
-              : undefined
-          }
-        >
-          {c}
-        </button>
-      ))}
+      {[ALL_CATEGORIES, ...categories].map((c) => {
+        const Icon = c === ALL_CATEGORIES ? null : categoryIcon(c);
+        return (
+          <button
+            key={c}
+            type="button"
+            onClick={() => onSelect(c)}
+            aria-current={selected === c}
+            className={`flex shrink-0 items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors ${
+              selected === c ? "" : "border-border text-muted hover:text-foreground"
+            }`}
+            style={
+              selected === c
+                ? {
+                    borderColor: color?.accent ?? "var(--accent)",
+                    background: color?.soft ?? "var(--accent-soft)",
+                    color: color?.accent ?? "var(--accent)",
+                  }
+                : undefined
+            }
+          >
+            {Icon && <Icon size={13} strokeWidth={2} aria-hidden />}
+            {c}
+          </button>
+        );
+      })}
     </>
   );
 }
@@ -277,6 +288,8 @@ function PromptCard({
   showRole: boolean;
   color: RoleColor;
 }) {
+  const RoleIcon = roleIcon(prompt.role);
+  const CategoryIcon = categoryIcon(prompt.category);
   return (
     <Link
       href={`/prompts/${prompt.slug}`}
@@ -286,13 +299,17 @@ function PromptCard({
       <div className="flex flex-wrap items-center gap-1.5">
         {showRole && (
           <span
-            className="w-fit rounded-full px-2 py-0.5 text-xs font-medium"
+            className="flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
             style={{ background: color.soft, color: color.accent }}
           >
+            <RoleIcon size={12} strokeWidth={2} aria-hidden />
             {prompt.role}
           </span>
         )}
-        <span className="w-fit text-xs font-medium text-muted">{prompt.category}</span>
+        <span className="flex w-fit items-center gap-1 text-xs font-medium text-muted">
+          <CategoryIcon size={12} strokeWidth={2} aria-hidden />
+          {prompt.category}
+        </span>
       </div>
       <h2 className="font-medium text-foreground transition-colors group-hover:text-[var(--role-accent)]">
         {prompt.title}

@@ -2,10 +2,13 @@
 
 import { Fragment, useMemo, useState, type CSSProperties } from "react";
 import { assemblePrompt, fieldTypeFor, type Prompt, type RoleColor } from "@/lib/prompt-types";
+import { categoryIcon, roleIcon } from "@/lib/icons";
 
 const PLACEHOLDER_RE = /\[([A-Z0-9_]+)\]/g;
 
 export default function PromptDetail({ prompt, color }: { prompt: Prompt; color: RoleColor }) {
+  const RoleBadgeIcon = roleIcon(prompt.role);
+  const CategoryBadgeIcon = categoryIcon(prompt.category);
   const variables = useMemo(() => {
     const found = new Set<string>();
     for (const match of prompt.body.matchAll(PLACEHOLDER_RE)) found.add(match[1]);
@@ -59,12 +62,16 @@ export default function PromptDetail({ prompt, color }: { prompt: Prompt; color:
       <section aria-labelledby="prompt-heading">
         <div className="flex flex-wrap items-center gap-1.5">
           <span
-            className="w-fit rounded-full px-2 py-0.5 text-xs font-medium"
+            className="flex w-fit items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium"
             style={{ background: color.soft, color: color.accent }}
           >
+            <RoleBadgeIcon size={12} strokeWidth={2} aria-hidden />
             {prompt.role}
           </span>
-          <span className="w-fit text-xs font-medium text-muted">{prompt.category}</span>
+          <span className="flex w-fit items-center gap-1 text-xs font-medium text-muted">
+            <CategoryBadgeIcon size={12} strokeWidth={2} aria-hidden />
+            {prompt.category}
+          </span>
         </div>
         <h1 id="prompt-heading" className="mt-2 text-xl font-semibold text-foreground">
           {prompt.title}

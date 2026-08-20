@@ -37,6 +37,10 @@ yarn-error.log*
 # vercel
 .vercel
 
+# source assets staged for public/ and src/app/icon.png; the served copies
+# there are the ones that matter, this is just the upload staging folder
+/images
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
