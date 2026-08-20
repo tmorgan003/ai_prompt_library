@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AccessLevel {
+  VIEWER
+  CONTRIBUTOR
+  ADMIN
+}
+
+// --- Auth.js (NextAuth v5) standard models ---
+
+model User {
+  id            String      @id @default(cuid())
+  name          String?
+  email         String?     @unique
+  emailVerified DateTime?
+  image         String?
+  accessLevel   AccessLevel @default(VIEWER)
+  createdAt     DateTime    @default(now())
+
+  accounts Account[]
+  sessions Session[]
+  prompts  Prompt[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// --- Prompt library domain models ---
+// "Role" here means the business/company role a prompt belongs to
+// (e.g. "Business Analyst"), unrelated to AccessLevel above.
+
+model PromptRole {
+  id         String           @id @default(cuid())
+  name       String           @unique
+  slug       String           @unique
+  categories PromptCategory[]
+  prompts    Prompt[]
+}
+
+model PromptCategory {
+  id      String     @id @default(cuid())
+  name    String
+  slug    String
+  roleId  String
+  role    PromptRole @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  prompts Prompt[]
+
+  @@unique([roleId, slug])
+}
+
+model Prompt {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String
+  useCase     String
+  promptText  String
+  variables   String[]
+  tags        String[]
+  archived    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  roleId String
+  role   PromptRole @relation(fields: [roleId], references: [id])
+
+  categoryId String
+  category   PromptCategory @relation(fields: [categoryId], references: [id])
+
+  createdById String?
+  createdBy   User?   @relation(fields: [createdById], references: [id])
+}
