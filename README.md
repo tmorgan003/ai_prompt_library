@@ -2,7 +2,7 @@
 
 A searchable, browsable library of enterprise-grade Claude prompts, organized by **role** (the company function a prompt belongs to) and **category** (the type of prompt within that role). It launched as a Business Analyst-only tool and now covers eleven roles: Business Analyst, Software Developer, Project Manager, Product Manager, Data Analyst, HR/People Operations Manager, All Employees, Salesperson, Executive, Marketing Manager, and Customer Success Manager, 364 prompts in total.
 
-**Live app:** deployed on Vercel. **This repo is the product.**
+**Live app:** not yet deployed. The app is Vercel-ready (see Local development below); deploying is just connecting this repo to a Vercel project and setting the environment variables. **This repo is the product.**
 
 ## Why this exists
 
