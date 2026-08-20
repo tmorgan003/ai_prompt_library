@@ -81,6 +81,8 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+On Windows, after the one-time setup above, `startup.bat` starts the Postgres container (creating it first if needed) and the dev server in one step.
+
 The GitHub OAuth backend works today via NextAuth's own routes (e.g. `/api/auth/signin`) even though there's no button linking to it yet. To use it, create a GitHub OAuth App at [github.com/settings/developers](https://github.com/settings/developers) with callback URL `http://localhost:3000/api/auth/callback/github`, and put its client ID/secret in `.env`. Set `ADMIN_EMAIL` in `.env` to your GitHub account's email to auto-promote yourself to ADMIN on first sign-in.
 
 ```bash
