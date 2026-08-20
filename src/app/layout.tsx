@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
-import AuthSessionProvider from "@/components/session-provider";
-import AuthButton from "@/components/auth-button";
 import "./globals.css";
 
 const sans = Inter({
@@ -25,12 +23,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} h-full`}>
       <body className="min-h-full flex flex-col bg-background text-foreground antialiased">
-        <AuthSessionProvider>
-          <div className="flex justify-end border-b border-border bg-surface px-4 py-1.5 md:px-8">
-            <AuthButton />
-          </div>
-          {children}
-        </AuthSessionProvider>
+        {children}
       </body>
     </html>
   );

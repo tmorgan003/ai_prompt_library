@@ -19,7 +19,7 @@ It's also meant to demonstrate something a resume line can't: what it looks like
 
 Each role gets a distinct accent color, spaced evenly around the color wheel across every present role so no two roles end up looking alike, used throughout: role pills, the active category filter, placeholder highlights, and the copy button. This makes the role/category structure visually legible, not just a filter dropdown.
 
-Sign-in is optional (GitHub OAuth) and only needed for features that require knowing who you are; browsing, searching, and copying prompts work fully signed out.
+There's no sign-in UI yet; browsing, searching, and copying prompts all work without an account. The GitHub OAuth backend (NextAuth, `AccessLevel` on the user model) is already wired up and ready for the features that will actually need it (adding/editing prompts, RBAC, etc.), but there's no reason to show a sign-in button before anything is gated on it.
 
 ## How prompts are structured
 
@@ -81,7 +81,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-To sign in locally, create a GitHub OAuth App at [github.com/settings/developers](https://github.com/settings/developers) with callback URL `http://localhost:3000/api/auth/callback/github`, and put its client ID/secret in `.env`. Set `ADMIN_EMAIL` in `.env` to your GitHub account's email to auto-promote yourself to ADMIN on first sign-in.
+The GitHub OAuth backend works today via NextAuth's own routes (e.g. `/api/auth/signin`) even though there's no button linking to it yet. To use it, create a GitHub OAuth App at [github.com/settings/developers](https://github.com/settings/developers) with callback URL `http://localhost:3000/api/auth/callback/github`, and put its client ID/secret in `.env`. Set `ADMIN_EMAIL` in `.env` to your GitHub account's email to auto-promote yourself to ADMIN on first sign-in.
 
 ```bash
 npm run build   # production server build
